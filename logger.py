@@ -1,3 +1,6 @@
+from person import Person
+
+
 class Logger(object):
     ''' Utility class responsible for logging all interactions during the simulation. '''
     # TODO: Write a test suite for this class to make sure each method is working
@@ -43,7 +46,20 @@ class Logger(object):
         # represent all the possible edge cases. Use the values passed along with each person,
         # along with whether they are sick or vaccinated when they interact to determine
         # exactly what happened in the interaction and create a String, and write to your logfile.
-        pass
+        
+        # if person interacts with random sick person not vaccinated
+        # infects
+        log_file = open(self.file_name, "a")
+
+        if did_infect and not random_person_sick and not random_person_vacc:
+            log_file.write(f"{person._id} infects {random_person._id}\n")
+        else: # not infected
+            if random_person_sick:
+                log_file.write(f"{person._id} didn't infect {random_person._id} because already sick.\n")
+            else:
+                log_file.write(f"{person._id} didn't infect {random_person._id} because vaccinated.\n")
+    
+        log_file.close()
 
     def log_infection_survival(self, person, did_die_from_infection):
         ''' The Simulation object uses this method to log the results of every
@@ -55,7 +71,15 @@ class Logger(object):
         # TODO: Finish this method. If the person survives, did_die_from_infection
         # should be False.  Otherwise, did_die_from_infection should be True.
         # Append the results of the infection to the logfile
-        pass
+        
+        log_file = open(self.file_name, "a")
+
+        if not did_die_from_infection:
+            log_file.write(f"{person._id} survived infection.\n")
+        else:
+            log_file.write(f"{person._id} died from infection.\n")
+        
+        log_file.close()
 
     def log_time_step(self, time_step_number):
         ''' STRETCH CHALLENGE DETAILS:
@@ -79,3 +103,9 @@ class Logger(object):
 
 obj = Logger("Info.txt") 
 obj.write_metadata(1000, .67, "Brenda", .78, 65)
+p1 = Person(21, False)
+p2 = Person(56, False)
+obj.log_interaction(p1, p2, True, False, True)
+
+obj.log_infection_survival(p1, False)
+
