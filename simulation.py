@@ -1,10 +1,11 @@
+import math
 import random, sys
 random.seed(42)
 from person import Person
 from logger import Logger
 from virus import Virus
 
-
+population = [] 
 class Simulation(object):
     ''' Main class that will run the herd immunity simulation program.
     Expects initialization parameters passed as command line arguments when file is run.
@@ -13,7 +14,7 @@ class Simulation(object):
     population that are vaccinated, the size of the population, and the amount of initially
     infected people in a population are all variables that can be set when the program is run.
     '''
-    def __init__(self, pop_size, vacc_percentage, initial_infected=1, virus):
+    def __init__(self, pop_size, vacc_percentage, initial_infected, virus):
         ''' Logger object logger records all events during the simulation.
         Population represents all Persons in the population.
         The next_person_id is the next available id for all created Persons,
@@ -29,14 +30,18 @@ class Simulation(object):
         All arguments will be passed as command-line arguments when the file is run.
         HINT: Look in the if __name__ == "__main__" function at the bottom.
         '''
-        # TODO: Create a Logger object and bind it to self.logger.
+        # Create a Logger object and bind it to self.logger.
         # Remember to call the appropriate logger method in the corresponding parts of the simulation.
-        # TODO: Call self._create_population() and pass in the correct parameters.
+        
+        # Call self._create_population() and pass in the correct parameters.
         # Store the array that this method will return in the self.population attribute.
         # TODO: Store each newly infected person's ID in newly_infected attribute.
         # At the end of each time step, call self._infect_newly_infected()
         # and then reset .newly_infected back to an empty list.
-        self.logger = None
+        self.file_name = "{}_simulation_pop_{}_vp_{}_infected_{}.txt".format(virus.name, pop_size, vacc_percentage, initial_infected)
+        self.logger = Logger(self.file_name.txt) 
+        self.logger.write_metadata(pop_size, vacc_percentage, virus.name, virus.mortality_rate, virus.repro_rate)
+
         self.population = [] # List of Person objects
         self.pop_size = pop_size # Int
         self.next_person_id = 0 # Int
@@ -46,11 +51,11 @@ class Simulation(object):
         self.current_infected = 0 # Int
         self.vacc_percentage = vacc_percentage # float between 0 and 1
         self.total_dead = 0 # Int
-        self.file_name = "{}_simulation_pop_{}_vp_{}_infected_{}.txt".format(
-            virus_name, population_size, vacc_percentage, initial_infected)
         self.newly_infected = []
 
-    def _create_population(self, initial_infected):
+        self.population = self._create_population(self.initial_infected)
+
+    def _create_population(self, initial_infected=0):
         '''This method will create the initial population.
             Args:
                 initial_infected (int): The number of infected people that the simulation
@@ -68,7 +73,26 @@ class Simulation(object):
 
         # Use the attributes created in the init method to create a population that has
         # the correct intial vaccination percentage and initial infected.
-        pass
+        
+        # array filled with Person objects
+        pop = []
+        for i in (0, self.pop_size):
+          pop.append(Person(i, False))
+
+        # infect people in population
+        randlist = random.sample(range(self.pop_size), initial_infected)
+        for i in randlist:
+          pop[i].infection = self.virus
+
+        random.shuffle(pop)
+
+        #vaccinate people
+        initial_vacc = math.ceil(self.pop_size * self.vacc_percentage)
+        randlist = random.sample(range(self.pop_size), initial_vacc)
+        for i in randlist:
+          pop[i].is_vaccinated = True
+
+        return pop
 
     def _simulation_should_continue(self):
         ''' The simulation should only end if the entire population is dead
@@ -169,3 +193,4 @@ if __name__ == "__main__":
     sim = Simulation(pop_size, vacc_percentage, initial_infected, virus)
 
     sim.run()
+ 

@@ -1,8 +1,8 @@
 class Student:
 
   def __init__(self, name, age, gpa):
-    self.name = name
     self.age = age
+    self.name = name
     self.gpa = gpa
   
   def info(self):
