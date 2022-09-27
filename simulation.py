@@ -1,3 +1,4 @@
+from asyncio import FastChildWatcher
 import math
 import random, sys
 random.seed(42)
@@ -32,9 +33,9 @@ class Simulation(object):
         '''
         # Create a Logger object and bind it to self.logger.
         # Remember to call the appropriate logger method in the corresponding parts of the simulation.
-        
         # Call self._create_population() and pass in the correct parameters.
         # Store the array that this method will return in the self.population attribute.
+
         # TODO: Store each newly infected person's ID in newly_infected attribute.
         # At the end of each time step, call self._infect_newly_infected()
         # and then reset .newly_infected back to an empty list.
@@ -101,8 +102,14 @@ class Simulation(object):
             Returns:
                 bool: True for simulation should continue, False if it should end.
         '''
-        # TODO: Complete this helper method.  Returns a Boolean.
-        pass
+        # TODO Complete this helper method.  Returns a Boolean.
+        
+        # if all of population is dead/vaccinated
+        for i in self.population:
+          if self.population[i].is_alive == True or self.population[i].is_vaccinated == False:
+            return True
+        return False
+
 
     def run(self):
         ''' This method should run the simulation until all requirements for ending
