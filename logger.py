@@ -98,6 +98,15 @@ class Logger(object):
         '''
         # TODO: Finish this method. This method should log when a time step ends, and a
         # new one begins.
+        log_file = open(self.file_name, "a")
+        #summary stats
+        log_file.write(f"Time step {time_step_number} \n")
+        log_file.write(f"Number of people infected: {}\n Number of people dead: {}\n")
+
+        log_file.write(f"Overall,\nTotal number of people infected in population: {}\n")
+        log_file.write(f"Total number of dead: {}\n")
+
+        log_file.write(f"Time step {time_step_number} ended, beginning {time_step_number + 1}\n")
         # NOTE: Here is an opportunity for a stretch challenge!
         pass
 
@@ -109,3 +118,4 @@ obj.log_interaction(p1, p2, True, False, True)
 
 obj.log_infection_survival(p1, False)
 
+obj.log_time_step(1)
