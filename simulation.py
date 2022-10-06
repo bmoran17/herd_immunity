@@ -36,12 +36,12 @@ class Simulation(object):
         # Call self._create_population() and pass in the correct parameters.
         # Store the array that this method will return in the self.population attribute.
 
-        # [?]: Store each newly infected person's ID in newly_infected attribute.
+        # [TODO]: Store each newly infected person's ID in newly_infected attribute.
 
         # At the end of each time step, call self._infect_newly_infected()
         # and then reset .newly_infected back to an empty list.
-        self.file_name = "{}_simulation_pop_{}_vp_{}_infected_{}.txt".format(virus.name, pop_size, vacc_percentage, initial_infected)
-        self.logger = Logger(self.file_name.txt) 
+        self.file_name = f"{virus.name}_simulation_pop_{pop_size}_vp_{vacc_percentage}_infected_{initial_infected}.txt"
+        self.logger = Logger(self.file_name) 
         self.logger.write_metadata(pop_size, vacc_percentage, virus.name, virus.mortality_rate, virus.repro_rate)
 
         self.population = [] # List of Person objects
@@ -56,8 +56,6 @@ class Simulation(object):
         self.newly_infected = []
 
         self.population = self._create_population(self.initial_infected)
-
-        newly_infected = self.newly_infected._id
 
     def _create_population(self, initial_infected=0):
         '''This method will create the initial population.
@@ -80,7 +78,7 @@ class Simulation(object):
         
         # array filled with Person objects
         pop = []
-        for i in (0, self.pop_size):
+        for i in range(self.pop_size):
           pop.append(Person(i, False))
 
         # infect people in population
@@ -107,10 +105,9 @@ class Simulation(object):
         '''
         # Complete this helper method.  Returns a Boolean.
         # if all of population is dead/vaccinated
-        for i in self.population:
-          if self.population[i].is_alive == True or self.population[i].is_vaccinated == False:
-            return True
-        return False
+        for person in self.population:
+          if person.is_alive == True or person.is_vaccinated == False:
+            return True             
 
 
     def run(self):
@@ -192,7 +189,6 @@ class Simulation(object):
         # to reset self.newly_infected back to an empty list.
         pass
 
-
 if __name__ == "__main__":
     params = sys.argv[1:]
     virus_name = str(params[0])
@@ -212,3 +208,8 @@ if __name__ == "__main__":
 
     sim.run()
  
+def test_simulation_should_continue_instantiation():
+    virus = Virus("Ebola", .45, .56)
+    simulation = Simulation(10, 1, 1, virus)
+
+    assert simulation._simulation_should_continue() is False
